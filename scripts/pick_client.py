@@ -32,7 +32,7 @@ import tf2_ros
 from tf2_geometry_msgs import do_transform_pose
 
 import numpy as np
-from std_srvs.srv import Empty
+from std_srvs.srv import Empty, Trigger, TriggerResponse
 
 import cv2
 from cv_bridge import CvBridge
@@ -50,11 +50,12 @@ class SphericalService(object):
 		self.pick_type = PickAruco()
 		rospy.loginfo("Finished SphericalService constructor")
                 self.place_gui = rospy.Service("/place_gui", Empty, self.start_aruco_place)
-                self.pick_gui = rospy.Service("/pick_gui", Empty, self.start_aruco_pick)
+                self.pick_gui = rospy.Service("/pick_gui", Trigger, self.start_aruco_pick)
 
 	def start_aruco_pick(self, req):
-		self.pick_type.pick_aruco("pick")
-		return {}
+		return TriggerResponse(success=True, message="Picked up object!")
+		#return self.pick_type.pick_aruco("pick",req)
+		#return {}
 
 	def start_aruco_place(self, req):
 		self.pick_type.pick_aruco("place")
@@ -100,7 +101,7 @@ class PickAruco(object):
    	def strip_leading_slash(self, s):
 		return s[1:] if s.startswith("/") else s
 		
-	def pick_aruco(self, string_operation):
+	def pick_aruco(self, string_operation,req):
 		self.prepare_robot()
 
 		rospy.sleep(2.0)
@@ -151,9 +152,11 @@ class PickAruco(object):
 			rospy.loginfo("Done!")
 
 			result = self.pick_as.get_result()
+			print(result)
 			if str(moveit_error_dict[result.error_code]) != "SUCCESS":
 				rospy.logerr("Failed to pick, not trying further")
-				return
+				return TriggerResponse(success=False, message="Pick failed!")
+				#return 'failed to pick'
 
 			# Move torso to its maximum height
                         self.lift_torso()
@@ -167,7 +170,7 @@ class PickAruco(object):
 			self.play_m_as.send_goal_and_wait(pmg)
 			rospy.loginfo("Raise object done.")
 
-			
+			return TriggerResponse(success=True, message="Picked up object!")
 
                         # Place the object back to its position
 			#rospy.loginfo("Gonna place near where it was")
