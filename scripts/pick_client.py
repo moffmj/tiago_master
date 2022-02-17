@@ -53,8 +53,8 @@ class SphericalService(object):
                 self.pick_gui = rospy.Service("/pick_gui", Trigger, self.start_aruco_pick)
 
 	def start_aruco_pick(self, req):
-		return TriggerResponse(success=True, message="Picked up object!")
-		#return self.pick_type.pick_aruco("pick",req)
+		#return TriggerResponse(success=True, message="Picked up object!")
+		return self.pick_type.pick_aruco("pick",req)
 		#return {}
 
 	def start_aruco_place(self, req):
