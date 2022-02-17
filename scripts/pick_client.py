@@ -210,12 +210,12 @@ class PickAruco(object):
                 rospy.loginfo("Done.")
 
 	def prepare_robot(self):
-		rospy.loginfo("Unfold arm safely")
-		pmg = PlayMotionGoal()
-		pmg.motion_name = 'pregrasp'
-		pmg.skip_planning = False
-		self.play_m_as.send_goal_and_wait(pmg)
-		rospy.loginfo("Done.")
+		#rospy.loginfo("Unfold arm safely")
+		#pmg = PlayMotionGoal()
+		#pmg.motion_name = 'pregrasp'
+		#pmg.skip_planning = False
+		#self.play_m_as.send_goal_and_wait(pmg)
+		#rospy.loginfo("Done.")
 		
 		self.lower_torso()
                 self.lower_head()
