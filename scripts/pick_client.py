@@ -49,7 +49,7 @@ class SphericalService(object):
 		rospy.loginfo("Starting Spherical Grab Service")
 		self.pick_type = PickAruco()
 		rospy.loginfo("Finished SphericalService constructor")
-                self.place_gui = rospy.Service("/place_gui", Empty, self.start_aruco_place)
+                #self.place_gui = rospy.Service("/place_gui", Empty, self.start_aruco_place)
                 self.pick_gui = rospy.Service("/pick_gui", Trigger, self.start_aruco_pick)
 
 	def start_aruco_pick(self, req):
@@ -57,9 +57,9 @@ class SphericalService(object):
 		return self.pick_type.pick_aruco("pick",req)
 		#return {}
 
-	def start_aruco_place(self, req):
-		self.pick_type.pick_aruco("place")
-		return {}
+	#def start_aruco_place(self, req):
+	#	self.pick_type.pick_aruco("place")
+	#	return {}
 
 class PickAruco(object):
 	def __init__(self):
@@ -74,10 +74,10 @@ class PickAruco(object):
 		if not self.pick_as.wait_for_server(rospy.Duration(20)):
 			rospy.logerr("Could not connect to /pickup_pose AS")
 			exit()
-		rospy.loginfo("Waiting for /place_pose AS...")
-		self.place_as = SimpleActionClient('/place_pose', PickUpPoseAction)
+		#rospy.loginfo("Waiting for /place_pose AS...")
+		#self.place_as = SimpleActionClient('/place_pose', PickUpPoseAction)
 
-		self.place_as.wait_for_server()
+		#self.place_as.wait_for_server()
 
 		rospy.loginfo("Setting publishers to torso and head controller...")
 		self.torso_cmd = rospy.Publisher(
