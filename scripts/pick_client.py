@@ -162,13 +162,15 @@ class PickAruco(object):
                         self.lift_torso()
 			#self.lower_torso()
 
-                        # Raise arm
+                        # Tuck arm
 			rospy.loginfo("Moving arm to a safe pose")
 			pmg = PlayMotionGoal()
                         pmg.motion_name = 'home'#'pick_final_pose'
 			pmg.skip_planning = False
 			self.play_m_as.send_goal_and_wait(pmg)
 			rospy.loginfo("Raise object done.")
+
+			self.raise_head()
 
 			return TriggerResponse(success=True, message="Picked up object!")
 
@@ -204,6 +206,17 @@ class PickAruco(object):
 		jt.joint_names = ['head_1_joint', 'head_2_joint']
 		jtp = JointTrajectoryPoint()
 		jtp.positions = [0.0, -0.75]
+		jtp.time_from_start = rospy.Duration(2.0)
+		jt.points.append(jtp)
+		self.head_cmd.publish(jt)
+                rospy.loginfo("Done.")
+
+	def raise_head(self):
+		rospy.loginfo("Moving head up")
+		jt = JointTrajectory()
+		jt.joint_names = ['head_1_joint', 'head_2_joint']
+		jtp = JointTrajectoryPoint()
+		jtp.positions = [0.0, 0.0]
 		jtp.time_from_start = rospy.Duration(2.0)
 		jt.points.append(jtp)
 		self.head_cmd.publish(jt)
