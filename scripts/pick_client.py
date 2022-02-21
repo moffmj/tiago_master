@@ -159,7 +159,7 @@ class PickAruco(object):
 				#return 'failed to pick'
 
 			# Move torso to its maximum height
-                        self.lift_torso()
+                        #self.lift_torso()
 			#self.lower_torso()
 
                         # Tuck arm
